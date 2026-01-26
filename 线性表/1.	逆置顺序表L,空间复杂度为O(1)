@@ -1,0 +1,14 @@
+bool RotateList(SqList &L)//输入元素：L
+{
+    if(L.length == 0)
+    {
+        return false;
+    }//检查数组是否有效
+    for(int i=0, i<0.5*L.length,i++)//读取L.length，应用for循环（i<n/2）进行逆置    //for循环使用的是;不是,
+    {
+        ElemType temp = L.data[i];
+        L.data[i]=L.data[L.length-i-1];//注意数组中的序号取值范围应该是[0，L.length-1]
+        L.datap[L.length-i]= temp;
+    }
+    return true;
+}
