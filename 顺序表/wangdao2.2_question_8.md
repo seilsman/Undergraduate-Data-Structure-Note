@@ -1,7 +1,7 @@
 题目：设计算法，要求：用最少时间在递增有序表中查找数值为x的元素。找到的话与后继元素交换，找不到则插入表中使其保持有序
 
 先放个代码块在这里，等会我们将引用ta
-```c
+```C
 #define maxsize 50
 typedef struct{
     ElemType data[maxsize];
@@ -10,7 +10,7 @@ typedef struct{
 ```
 
 查找操作的话，我个人的想法是采用二分法的形式：将中间值与x作比较，如果大于就比后半个顺序表，反之与前半个顺序表进行对比，这样的话复杂度从O（n）变成了O（logn）
-```c
+```C
 bool CompareElem(SqList &L,int &a,int &b,ElemType x)
 {
     if(x > L.data[(a+b)/2])
@@ -35,11 +35,11 @@ bool CompareElem(SqList &L,int &a,int &b,ElemType x)
 ```
 
 这个查找有一个问题就是：不能判断x跟这个数组里面的L.data[a]相等还是跟L.data[b]相等，所以后面得搞个判断
-       还有一个比较难受的点：要是x比这个数组里面全部的数都大/小，这个也是判断不出来的，但是都属于false，所以在最后的插入操作补救一下
+还有一个比较难受的点：要是x比这个数组里面全部的数都大/小，这个也是判断不出来的，但是都属于false，所以在最后的插入操作补救一下
 
 
 接下来是根据CompareElem的返回结果操作顺序表了,先整个改变元素顺序
-```c
+```C
 bool ReverseElem(SqList &L,int &a)
 {
     if(a == n-1)
@@ -57,7 +57,7 @@ bool ReverseElem(SqList &L,int &a)
 ```
 
 然后就是不存在的情况，这个挺麻烦的，毕竟顺序表的特性就决定了要是插入后续就是得全部都要改
-```c
+```C
 bool InsertElem(SqList &L,int &a,int x)
 {
     if(L.length == maxsize)
@@ -92,7 +92,7 @@ bool InsertElem(SqList &L,int &a,int x)
 ```
 
 三个主要模块写完了，最后就是当成函数进行应用即可
-```c
+```C
 bool pushElem(SqList &L,ElemType x)
 {
     if(L.length == 0 || L.length > maxsize)
@@ -133,6 +133,7 @@ int BinarySearch(SqList &L, int low, int high, ElemType x)
         return BinarySearch(L, mid + 1, high, x);//应用递归，对数组的右半部分进行比较
 }
 ```
+
 其次就是插入，其实可以再简化一点（最关键的是前面的二分查找成功把之前那个版本中所有的坑填上了，这样插入操作只需要整个while循环，将大于x的部分全部往后移就行）不过好在原来版本的插入操作写的是对的，就是二分查找爆了个大雷
 ```C
 void InsertElem(SqList &L, ElemType x)
@@ -194,10 +195,10 @@ void SearchAndProcess(SqList &L, ElemType x)
     else//没找到x
         InsertElem(L, x);//插入x使得表保持递增有序
 }
-```C
+```
 
 版本二：王道给出的while循环
-```c
+```C
 void SearchExchangeInsert(Elemrype A[],ElemType x)
 {
     int low=0,high=n-1,mid;//不应用函数块，直接设定变量
@@ -220,3 +221,4 @@ void SearchExchangeInsert(Elemrype A[],ElemType x)
         A[i+1] = x;
     }
 }
+```
