@@ -73,7 +73,7 @@ bool InsertElem(SqList &L,int &a,int x)
    {
       for(int i=L.length-1;i>0;i--)
       {
-        L.data[i]=L.data[i-1];
+        L.data[i]=L.data[i-1];//这个代码条件下前面for循环i的初始值就应该改成L.length了
       }
       L.data[0] = x;
       L.length++;
@@ -120,17 +120,17 @@ bool pushElem(SqList &L,ElemType x)
 ```C
 int BinarySearch(SqList &L, int low, int high, ElemType x)
 {
-    if (low > high)
+    if (low > high)//保证代码健壮性
         return -1;  // 查找失败
 
-    int mid = (low + high) / 2;//设定中间变量
+    int mid = (low + high) / 2;//设定中间变量，作为查找的信息之一
 
     if (x == L.data[mid])//将x直接与L.data[mid]比较，使得a与b可以正常收缩区间
         return mid;
     else if (x < L.data[mid])
-        return BinarySearch(L, low, mid - 1, x);
+        return BinarySearch(L, low, mid - 1, x);//应用递归，对数组的左半部分进行比较
     else
-        return BinarySearch(L, mid + 1, high, x);
+        return BinarySearch(L, mid + 1, high, x);//应用递归，对数组的右半部分进行比较
 }
 ```
 其次就是插入，其实可以再简化一点（最关键的是前面的二分查找成功把之前那个版本中所有的坑填上了，这样插入操作只需要整个while循环，将大于x的部分全部往后移就行）不过好在原来版本的插入操作写的是对的，就是二分查找爆了个大雷
@@ -147,3 +147,76 @@ void InsertElem(SqList &L, ElemType x)
     L.length++;
 }
 ```
+
+最后的答案
+版本一：chat大人给出的递归方法
+```C
+int BinarySearch(SqList &L, int low, int high, ElemType x)
+{
+    if (low > high)//保证代码健壮性
+        return -1;  // 查找失败
+
+    int mid = (low + high) / 2;//设定中间变量，作为查找的信息之一
+
+    if (x == L.data[mid])//将x直接与L.data[mid]比较，使得a与b可以正常收缩区间
+        return mid;
+    else if (x < L.data[mid])
+        return BinarySearch(L, low, mid - 1, x);//应用递归，对数组的左半部分进行比较
+    else
+        return BinarySearch(L, mid + 1, high, x);//应用递归，对数组的右半部分进行比较
+}
+void SwapWithNext(SqList &L, int pos)//代表x所在位置与其下一个元素交换的函数
+{
+    if (pos >= 0 && pos < L.length - 1)
+    {
+        ElemType temp = L.data[pos];//经典交换三行式：设置辅助变量然后进行变换
+        L.data[pos] = L.data[pos + 1];
+        L.data[pos + 1] = temp;
+    }
+}
+void InsertElem(SqList &L, ElemType x)//代表找不到x的情况下插入合适位序的函数
+{
+    int i = L.length - 1;
+    while (i >= 0 && L.data[i] > x)
+    {
+        L.data[i + 1] = L.data[i];//插入的时候需要注意从最后一个开始进行循环，从头开始会导致后一个元素的数据会被覆盖
+        i--;
+    }
+    L.data[i + 1] = x;//while循环中实现了比x大的元素全部向右移动了一个位置，最后空出来的位置就是x的
+    L.length++;
+}
+void SearchAndProcess(SqList &L, ElemType x)
+{
+    int pos = BinarySearch(L, 0, L.length - 1, x);//先找x的位置
+
+    if (pos != -1)//代表在表中找到了x
+        SwapWithNext(L, pos);//交换
+    else//没找到x
+        InsertElem(L, x);//插入x使得表保持递增有序
+}
+```C
+
+版本二：王道给出的while循环
+```c
+void SearchExchangeInsert(Elemrype A[],ElemType x)
+{
+    int low=0,high=n-1,mid;//不应用函数块，直接设定变量
+    while(low<=high)//直接套二分查找
+    {
+        mid=(low+high) /2;
+        
+        if (A[mid]==x) break;
+        else if(A[mid]<x) 
+        low=mid+1;
+        else high=mid-1;
+    }
+    if(A[mid]==x&&mid!=n-1)//找到了，直接交换即可
+    {
+        t=A[mid]; A[mid]=A[mid+1]; A[mid+1]=t;
+    }
+    if(low>high)//没找到：找个合适的位置，插进去
+    {
+        for(i=n-1;i>high;i--) A[i+1]=A[i];
+        A[i+1] = x;
+    }
+}
