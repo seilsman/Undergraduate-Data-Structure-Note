@@ -44,41 +44,43 @@ void LeftRotate(int &R[], int p)//R代表读取的一维数组，p代表读取�
 
 ### 2)代码实现：
 ```C
-int gcd(int a, int b)
+int gcd(int a, int b)//不引入库的情况下C是无法直接执行gcd函数的，所以要应用gcd需要先定义
     {
     while (b != 0)
     {
         int r = a % b;
         a = b;
         b = r;
+        //最大公因数性质：a与b的最大公因数，a与ab取余的最大公因数相等
     }
     return a;
     }
 
 bool LeftRotate(int R[], int p,int n)//R代表读取的一维数组，p代表读取的移动数量
 {
-    int d = gcd(n,p);
+    int d = gcd(n,p);//确定需要分环的个数
     if(p <= 0 || p>=n)
     {
-        return false;
+        return false;//健壮性体现：p为非正数or大于等于数组长度本身，没有比较意义
     }
     for(int i=0;i<d;i++)
     {
-        int cur = i;
-        int next = (i + p)% n;
-        int temp = R[cur];
+        int cur = i;//cur代表环中正在遍历的下标
+        int next = (i + p)% n;//next代表遍历位置的下一个下标
+        int temp = R[cur];//初始化环移动的变量
         while(next != i)
         {
-        R[cur] = R[next];
-        cur = next;
-        next = (next+p) %n;
+        R[cur] = R[next];//将环中的元素前移
+        cur = next;      
+        next = (next+p) %n;//准备遍历下一个位置
         }
-        R[cur] = temp;
+        R[cur] = temp;//当next ==i，代表此时环中的剩余元素全部完成前移操作，接下来将剩余的位置留给temp即可
     }
     return true;
 }
 ```
 ### 3)复杂度分析：
+
 时间复杂度$O(n)$，空间复杂度$S(1)$
 
 ## 4、王道解法
