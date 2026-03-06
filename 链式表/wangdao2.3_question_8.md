@@ -44,7 +44,7 @@ LinkList RemainSame(LinkList A,LinkList B,LinkList &C)
 > 尾插法应用有问题，将curC结点后接链表的赋值式子写反可能会导致内存溢出
 > 未初始化curC结点为NULL，可能混入野指针
 ## 3、chat大人给出的算法
-## 算法思路
+### 算法思路
 
 由于链表 $A$ 和 $B$ 均为**递增有序单链表**，可以采用类似**归并扫描**的方法：
 
@@ -65,7 +65,7 @@ LinkList RemainSame(LinkList A,LinkList B,LinkList &C)
 
 ---
 
-## C语言实现
+### C语言实现
 
 ```c
 LinkList RemainSame(LinkList A, LinkList B, LinkList C)
