@@ -35,6 +35,8 @@ bool SymmeticLink(LinkList A)
 > 在应用双端收缩的时候，没有根据链表长度为偶数的情况进行if条件判断，这将导致实际算法执行速度大幅减慢（因为这俩结点在链表中间会交错，最后只能通过同时访问头结点结束while循环）
 
 > 空链表判断不准确：双向循环链表若数据域为空，则头结点的prev和next结点将变成L结点本身，不会出现前驱/后继结点为NULL的情况
+
+> 双向链表初始化错误
 ## 3、chat大人给出的算法
 
 ### 一、算法设计思想
@@ -97,14 +99,14 @@ $$
 ### 二、C语言算法实现（带头结点循环双链表）
 
 ```c
-bool SymmetricLink(LinkList L)
+bool SymmetricLink(DLinkList L)
 {
     // 若链表为空（只有头结点）
     if(L->next == L)
         return true;
 
-    LNode *left  = L->next;   // 从表头开始
-    LNode *right = L->prev;   // 从表尾开始
+    DNode *left  = L->next;   // 从表头开始
+    DNode *right = L->prev;   // 从表尾开始
 
     // 当指针尚未相遇或交叉时继续比较
     while(left != right && left->prev != right)
@@ -244,7 +246,7 @@ right--
 ```c
 int Symmetry(DLinkList L) {
     DNode *p = L->next, *q = L->prior; // 两头工作指针
-    while (p != q && p->next != q) {    // 循环跳出条件
+    while (p != q && q->next != p) {    // 循环跳出条件
         if (p->data == q->data) {       // 所指结点值相同则继续比较
             p = p->next;
             q = q->prior;
